@@ -11,52 +11,25 @@ public class TFifo<T>
     private int mElemNo;   // ilosc elementow w kolejce
 
     // metody analogicznie!
-    //-------------
 
-    private class TFifoItem<T> {
-    private T mKey;
-    private TFifoItem mNext;
+    public TFifo(T[] queue){
+        q=queue;
+        mMaxSize= queue.length;
+        mHead = mTail = mElemNo = 0;
 
-    public TFifoItem() {
-
-    }
-
-    public TFifoItem(T key) {
-        this.mKey = key;
-
-    }
-
-    public T getKey() {
-        return this.mKey;
-    }
-
-    public TFifoItem getNext() {
-        return this.mNext;
-    }
-
-    public void setNext(TFifoItem item) {
-        this.mNext = item;
-    }
-    }
-    public TFifo(int size){
-        mMaxSize=size;
-        mHead=0;
-        mTail=0;
-        mElemNo=0;
-
-        q=<T>TFifoItem[size];//??//
     }
     public boolean  QFEmpty(){
         return mElemNo==0;
     }
     public void QFEnqueue( T x  ) throws ExceptionTFifo {
 
-        if(mElemNo==mMaxSize)
+        if(mElemNo>=mMaxSize)
             throw new ExceptionTFifo(ErrCode.TFIFO_OVERFLOW);
-        T var= x;
-        q[mTail]=var;
+
+        q[mTail]=x;
         mTail=(mTail+1)%mMaxSize;
         mElemNo++;
+
     }
     public T QFDequeue() throws ExceptionTFifo{
         if(QFEmpty())
@@ -69,15 +42,25 @@ public class TFifo<T>
 
         return var;
     }
-    public void  QFClear(){
+    public void QFClear(){
         while(!QFEmpty())
-            QFDequeue();
+            del();
+        mHead=mTail=0;
     }
     public void QFPrint(){
-        int head = mHead;
-        for(int i =0;i<mElemNo;i++){
-            System.out.println(q[head]);
+
+        for (int i=mHead;;){
+            if(i==mTail) break;
+            System.out.println(q[i]);
+            i=(i+1)%mMaxSize;
         }
+    }
+    private void del(){
+        if(QFEmpty())
+            throw new ExceptionTFifo(ErrCode.TFIFO_IS_EMPTY);
+        q[mHead]=null;
+        mElemNo--;
+        mHead=(mHead-1)%mMaxSize;
     }
 }
 

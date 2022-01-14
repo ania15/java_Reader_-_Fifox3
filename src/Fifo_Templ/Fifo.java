@@ -9,71 +9,61 @@ public class Fifo<T>
         private FifoItem mNext;
 
         public FifoItem(){
-
+            mNext=null;
         }
         public FifoItem( T key  ){
-            this.mKey=key;
-
+           mKey=key;
+            mNext=null;
         }
         public T getKey(){
-            return this.mKey;
+            return mKey;
         }
         public FifoItem getNext(){
-            return this.mNext;
+            return mNext;
         }
         public void setNext( FifoItem item ){
-            this.mNext=item;
+            mNext=item;
         }
     }
     //-------------
-    public Fifo(){
-
+    public Fifo() throws ExceptionFifo{
+        try{
+            mHead=mTail=new FifoItem<T>();
+        }catch(OutOfMemoryError e){
+            throw new ExceptionFifo(ErrCode.FIFO_ALLOCATION);
+        }
     }
     public boolean  QFEmpty(){
-        return mHead==null;
+        return mHead.getNext()==null;
     }
     public void QFEnqueue( T x  ){
         try {
-
-            if(QFEmpty()) {
-                this.mHead = new FifoItem(x);
-                this.mTail = this.mHead;
-            }else{
-                mTail.mNext=new FifoItem(x);
-                this.mTail=mTail.mNext;
-            }
+           mTail.setNext(new FifoItem(x));
         }catch(OutOfMemoryError e) {
-            throw new ExceptionFifo(ErrCode.FIFO_OVERFLOW);
+            throw new ExceptionFifo(ErrCode.FIFO_ALLOCATION);
         }
-
-
+        mTail=mTail.getNext();
     }
     public T QFDequeue() throws ExceptionFifo {
-        try{
-            T var = (T)mHead.mKey;
-            if(mHead==mTail){
-                mHead=null;
-                mTail=null;
-            }else{
-                FifoItem p = mHead;
-                mHead=p.mNext;
-                p=null;
-            }
-            return var;
 
-        }catch(RuntimeException e){
-            throw new ExceptionFifo(ErrCode.FIFO_IS_EMPTY);
+        if(!QFEmpty()){
+            T x = (T)(mHead.getNext().getKey());
+            mHead=mHead.getNext();
+            if(QFEmpty()) mTail=null;
+            return x;
         }
+        throw new ExceptionFifo(ErrCode.FIFO_IS_EMPTY);
     }
     public void  QFClear(){
         while(!QFEmpty())
             QFDequeue();
+        mHead=mTail=null;
     }
     public void QFPrint(){
-        FifoItem current=this.mHead;
+        FifoItem current=mHead.getNext();
         while(current!=null){
-            System.out.println(current.mKey);
-            current=current.mNext;
+            System.out.println(current.getKey().toString());
+            current=current.getNext();
         }
     }
 

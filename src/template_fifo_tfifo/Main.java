@@ -11,7 +11,8 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
         Fifo<Integer> f=new Fifo<Integer>();
-        TFifo<Double> tf=new TFifo<Double>(5);
+        Double t[]={1.2,2.3,3.4,4.5};
+        TFifo<Double> tf=new TFifo<Double>(t);
 
         try {
             f.QFEnqueue(1);
@@ -27,9 +28,9 @@ public class Main {
         try {
 
 
-            tf.QFEnqueue(1.2);
-            tf.QFEnqueue(2.3);
-            tf.QFEnqueue(3.4);
+            tf.QFEnqueue(1.5);
+            tf.QFEnqueue(2.6);
+            tf.QFEnqueue(3.7);
             tf.QFPrint();
         }
         catch(ExceptionTFifo e){

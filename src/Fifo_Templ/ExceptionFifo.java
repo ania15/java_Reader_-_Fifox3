@@ -2,7 +2,7 @@ package Fifo_Templ;
 
 
 
-enum ErrCode { FIFO_OVERFLOW, FIFO_IS_EMPTY, OTHER_ERROR}
+enum ErrCode { FIFO_ALLOCATION, FIFO_IS_EMPTY, OTHER_ERROR}
 
 
 public class ExceptionFifo extends RuntimeException // Exception
@@ -14,7 +14,7 @@ public class ExceptionFifo extends RuntimeException // Exception
     public String getReason()
     {
         switch(mErrCode){
-            case FIFO_OVERFLOW: return "\nFifo overflow!\n";
+            case FIFO_ALLOCATION: return "\nFifo allocation error!\n";
             case FIFO_IS_EMPTY: return "\nFifo is empty!\n";
             default: return"\nOther error!\n";
         }
